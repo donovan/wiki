@@ -511,6 +511,16 @@ Also see [[AdvancedOptions]]</pre>
 </div>
 <!--POST-SHADOWAREA-->
 <div id="storeArea">
+<div title="Ammending a git commit" modifier="Don" created="201002180426" modified="201002180448" tags="git commit ammend" changecount="3">
+<pre>!!problem
+you forgot to add a file to a commit or you want to change what you commited to a particular file
+!!soultion
+as long as you havent commited yet you can just run git commit --ammend
+{{{
+$ git add missing.file
+$ git commit --amend
+}}}</pre>
+</div>
 <div title="Cloning from github" modifier="Don" created="201002160548" tags="git github clone repo" changecount="1">
 <pre>!!Problem
 You have a bunch of github repos and you want to get them working on an additional computer.
@@ -519,6 +529,20 @@ You have a bunch of github repos and you want to get them working on an addition
 Firstly you should have the same ssh key and then you should clone the repo using the private url:
 {{{
 $ git clone git@github.com:donovan/repo-name.git
+}}}</pre>
+</div>
+<div title="Date Commands" modifier="Don" created="201002180109" tags="date" changecount="1">
+<pre>To display the date in iso format:
+{{{
+$ date +%F
+2010-02-18
+$ date --iso-8601
+2010-02-18
+}}}
+To display unix seconds:
+{{{
+$ date +%s
+1266453486
 }}}</pre>
 </div>
 <div title="Git pull doesnt know merge branch" modifier="Don" created="201002170146" tags="git config pull" changecount="1">
@@ -554,7 +578,7 @@ $ git config branch.master.merge refs/heads/master
 }}}
 </pre>
 </div>
-<div title="Github todo" modifier="Don" created="201002170202" modified="201002172135" tags="todo" changecount="4">
+<div title="Github todo" modifier="Don" created="201002170202" modified="201002172250" tags="todo" changecount="8">
 <pre>!! New projects
 * mtr style dns for watching ttls 
 * add temp project
@@ -569,7 +593,49 @@ $ git config branch.master.merge refs/heads/master
 !! dgrep
 make paths relative
 !! tracks
-make a kmz file</pre>
+make a kmz file
+!! vim tools
+* make align
+* remove trailing whitespace from fsql
+!!! list convertor
+converts this:
+{{{
+            # insert into Friends table
+            $DBH-&gt;do(
+                $ins_friends,
+                {},
+                $ARGS{firstname},
+                $ARGS{lastname},
+                $ARGS{address1},
+                $ARGS{address2},
+                $ARGS{email},
+                $ARGS{phone},
+                $ARGS{region},
+                $ARGS{event_types},
+                $ARGS{event_locations},
+                $ARGS{activation_code},
+            );
+
+            # send email to address
+            my $email = {
+                from    =&gt; $Cfg-&gt;val('Email', 'Admin'),
+                to      =&gt; $ARGS{email},
+                type    =&gt; 'text/html',
+                subject =&gt; $friends_subject,
+                data    =&gt; $friends_body,
+            };
+}}}
+to this
+{{{
+            # insert into Friends table
+            $DBH-&gt;do( $ins_friends, {}, $ARGS{firstname}, $ARGS{lastname}, $ARGS{address1}, $ARGS{address2}, $ARGS{email}, $ARGS{phone}, $ARGS{region}, $ARGS{event_types}, $ARGS{event_locations}, $ARGS{activation_code} );
+
+            # send email to address
+            my $email = { from =&gt; $Cfg-&gt;val('Email', 'Admin'), to =&gt; $ARGS{email}, type =&gt; 'text/html', subject =&gt; $friends_subject, data =&gt; $friends_body };
+}}}
+and vice versa. note trailing comma behaviour
+!! wiki
+* import wiki content suitable for public consumption</pre>
 </div>
 <div title="HTML" modifier="Don" created="201002112123" tags="html forms form target" changecount="1">
 <pre>http://www.maxdesign.com.au/presentation/definition/ theming definition lists
@@ -618,11 +684,79 @@ $(&quot;select#mm-eventselector2&quot;).change(foobar);
 $(&quot;select#mm-eventselector3&quot;).change(foobar);
 }}}</pre>
 </div>
+<div title="Perl DBI Cookbook" modifier="Don" created="201002180305" tags="perl dbi cookbook" changecount="1">
+<pre>when you want an array that corresponds to all the values in a column do:
+{{{
+my $used_codes = $DBH-&gt;selectcol_arrayref('SELECT DISTINCT sms_code FROM tc_promo');
+foreach my $code (@$used_codes) {}
+}}}
+when you want one particular value to put into a variable do: 
+{{{
+my $last_id = $dbh-&gt;selectrow_array('SELECT id FROM person WHERE name=?', undef, 'foobar');
+$dyk = $DBH-&gt;selectrow_array(&quot;SELECT content FROM multinews_content WHERE content_type = 'did_you_know'&quot;);
+}}}
+when you want more than one value from a single row:
+{{{
+my ($label_1, $text_1, $label_2, $text_2) = $DBH-&gt;selectrow_array('SELECT label1,text1,label2,text2 FROM rc_race_insights WHERE rc_race_id=?', undef, $raceid);
+}}}
+when you want multiple rows from the database with the ordering preserved:
+{{{
+my $regions = $DBH-&gt;selectall_arrayref(&quot;SELECT id, region_name FROM dshr_regions ORDER BY quarter LIKE '%North%' DESC, icon_y&quot;, { Slice =&gt; {} });
+foreach my $region ( @$regions ) {
+&lt;option value=&quot;&lt;% $region-&gt;{id} | h %&gt;&quot;&gt;&lt;% $region-&gt;{region_name} | h %&gt;&lt;/option&gt;
+}
+}}}
+
+when you want to select multiple rows and use the first and last rows (eg where the rows are sorted by date)
+{{{
+    my $festival = $DBH-&gt;selectall_arrayref(&quot;
+    SELECT
+        EXTRACT(EPOCH FROM e.date) AS date,
+        f.small_logo AS logo,
+        f.description,
+        f.url,
+        f.name
+    FROM
+        dshr_event e
+    JOIN
+        dshr_festival f ON e.dshr_festival_id=f.id
+    WHERE
+        e.event_type = 'Festival'
+    AND
+        e.visible = TRUE
+    AND
+        e.dshr_festival_id=?
+    ORDER BY
+        e.date
+    &quot;, { Slice =&gt; {} }, $id);
+
+         &lt;img src=&quot;&lt;% $image_path | h %&gt;/&lt;% $festival-&gt;[0]{logo} | h %&gt;&quot; alt=&quot;&lt;% $festival-&gt;[0]{name} | h %&gt;&quot; /&gt;
+        &lt;% $festival-&gt;[0]{description} %&gt;
+        &lt;p&gt;Official website: &lt;a href=&quot;&lt;% $festival-&gt;[0]{url} | h %&gt;&quot;&gt;&lt;% $festival-&gt;[0]{url} | h %&gt;&lt;/a&gt;&lt;/p&gt;
+        &lt;p&gt;Date: &lt;% $m-&gt;comp('/the-races/comp/date_link.mhtml', url =&gt; 'none', start =&gt; $festival-&gt;[0]{date}, end =&gt; $festival-&gt;[-1]{date}) %&gt;&lt;/p&gt;
+}}}
+
+see also: http://wellington.pm.org/archive/200806/martyn-dbi/slide009.html and perldoc DBI</pre>
+</div>
 <div title="SiteSubtitle" modifier="Don" created="201002150348" changecount="1">
 <pre>lots of documentation for all the family</pre>
 </div>
 <div title="SiteTitle" modifier="Don" created="201002150347" changecount="1">
 <pre>Don's Wiki</pre>
+</div>
+<div title="Vim Macros" modifier="Don" created="201002180302" tags="vim macro record" changecount="1">
+<pre>qq # record to q
+
+your complex series of commands
+
+q
+
+@q to execute
+
+{{{
+@@
+}}}
+to repeat</pre>
 </div>
 </div>
 <!--POST-STOREAREA-->
