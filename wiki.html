@@ -545,6 +545,21 @@ $ date +%s
 1266453486
 }}}</pre>
 </div>
+<div title="Git branching from an older commit" modifier="Don" created="201002190052" tags="git branch checkout commit hash" changecount="1">
+<pre>!!problem
+you want to branch from some arbitrary commit in the past
+
+!!solution
+find the commit hash for the commit where you want to branch from and then issue this command git branch [options] [-l] [-f] &lt;branchname&gt; [&lt;start-point&gt;]
+{{{
+git branch [options] [-l] [-f] &lt;branchname&gt; [&lt;start-point&gt;]
+}}}
+eg:
+{{{
+$ git branch release-1.147 741e26d9f3c1fce50a5c80625b4f9c3dcee8f608
+$ git checkout release-1.147
+}}}</pre>
+</div>
 <div title="Git pull doesnt know merge branch" modifier="Don" created="201002170146" tags="git config pull" changecount="1">
 <pre>!!Problem
 you do a git pull and git complains about not knowing the correct merge branch
@@ -578,7 +593,7 @@ $ git config branch.master.merge refs/heads/master
 }}}
 </pre>
 </div>
-<div title="Github todo" modifier="Don" created="201002170202" modified="201002172250" tags="todo" changecount="8">
+<div title="Github todo" modifier="Don" created="201002170202" modified="201002190241" tags="todo" changecount="11">
 <pre>!! New projects
 * mtr style dns for watching ttls 
 * add temp project
@@ -591,7 +606,9 @@ $ git config branch.master.merge refs/heads/master
 * name temp tools?
 * temp query script, hottest ever, by year, by month
 !! dgrep
-make paths relative
+* do ignore files
+* use File::Temp
+* add support for non suffix files like autohandler, syshandler and dhandler
 !! tracks
 make a kmz file
 !! vim tools
