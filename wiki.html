@@ -521,6 +521,50 @@ $ git add missing.file
 $ git commit --amend
 }}}</pre>
 </div>
+<div title="Bash Scripting" modifier="Don" created="201002232129" modified="201002232137" tags="loop bash script if for" changecount="2">
+<pre>!! test [ ] construct
+* see page 117 of learning the bash shell
+
+!!parameter expansion
+* http://wooledge.org:8000/BashFAQ/073
+* man bash /Parameter Expansion
+* http://bash-hackers.org/wiki/doku.php/syntax/pe
+!!if statements
+on command line:
+{{{
+$ FOO=sarge; if [ $FOO == 'sarge' ]; then echo 'pwconv'; fi
+}}}
+in a script
+{{{
+ if [ $FOO == 'sarge' ]; then
+    echo 'pwconv'
+ fi
+}}}
+!!for loops
+on command line:
+{{{
+$ for foo in a b c d e ; do echo $foo ; done
+
+$ for comp in changes.mhtml racerecords.mhtml racerlink_byentry.mhtml runnerperformance.mhtml wins.mhtml ; do  echo == $comp == ; grep -Rl $comp * ; done
+ 
+$ for i in `ls /sbin`; do file /sbin/$i | grep ASCII; done
+
+$ for i in `cat axyl_tables.txt`; do echo $i; done
+
+$ for foo in `ls *.jpg` ; do convert $foo -thumbnail 95x60 ${foo/%.jpg/.gif}; done
+
+$ for dir in .wrms .bugzilla .cron .spam ; do mkdir $dir/{cur,tmp,new} ; done
+
+$ for dir in `ls -1d */`; do echo '----------------------'; echo $dir; cd $dir; git status; cd ~/projects/; done
+}}}
+in a script
+{{{
+ for foo in a b c d e
+ do
+    echo $foo
+ done
+}}}</pre>
+</div>
 <div title="Cloning from github" modifier="Don" created="201002160548" tags="git github clone repo" changecount="1">
 <pre>!!Problem
 You have a bunch of github repos and you want to get them working on an additional computer.
@@ -544,6 +588,9 @@ To display unix seconds:
 $ date +%s
 1266453486
 }}}</pre>
+</div>
+<div title="DefaultTiddlers" modifier="Don" created="201002232122" changecount="1">
+<pre>[[Github todo]]</pre>
 </div>
 <div title="Git branching from an older commit" modifier="Don" created="201002190052" tags="git branch checkout commit hash" changecount="1">
 <pre>!!problem
@@ -593,7 +640,30 @@ $ git config branch.master.merge refs/heads/master
 }}}
 </pre>
 </div>
-<div title="Github todo" modifier="Don" created="201002170202" modified="201002190241" tags="todo" changecount="11">
+<div title="Github forking" modifier="Don" created="201002230438" modified="201002232032" tags="git fork remote upstream checkout" changecount="2">
+<pre>{{{
+$ git remote add upstream git://github.com/ranginui/koha.git
+$ git fetch upstream
+$ git checkout -b originmaster --track upstream/originmaster
+}}}
+Then when you have some work to commit you need to do:
+{{{
+$ git push -f origin originmaster
+}}}
+after that you can just use
+{{{
+$ git push origin
+}}}
+to find out what the hell is going on these commands can be useful:
+{{{
+$ git config -l
+$ git remote show
+$ git remote show origin
+$ git remote show master
+}}}
+see also http://help.github.com/forking/</pre>
+</div>
+<div title="Github todo" modifier="Don" created="201002170202" modified="201002232123" tags="todo" changecount="12">
 <pre>!! New projects
 * mtr style dns for watching ttls 
 * add temp project
@@ -701,6 +771,11 @@ $(&quot;select#mm-eventselector2&quot;).change(foobar);
 $(&quot;select#mm-eventselector3&quot;).change(foobar);
 }}}</pre>
 </div>
+<div title="KOHA TODO" modifier="Don" created="201002232121" tags="koha todo" changecount="1">
+<pre>* work on bug 2505
+* trailing whitespace
+* SQL formating</pre>
+</div>
 <div title="Perl DBI Cookbook" modifier="Don" created="201002180305" tags="perl dbi cookbook" changecount="1">
 <pre>when you want an array that corresponds to all the values in a column do:
 {{{
@@ -774,6 +849,12 @@ q
 @@
 }}}
 to repeat</pre>
+</div>
+<div title="psql nulls" modifier="Don" created="201002222300" tags="null psql sql postgres pset" changecount="1">
+<pre>To make psql display something for nulls use pset:
+{{{
+tab=&gt; \pset null 'NULL'
+}}}</pre>
 </div>
 </div>
 <!--POST-STOREAREA-->
