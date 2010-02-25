@@ -511,6 +511,12 @@ Also see [[AdvancedOptions]]</pre>
 </div>
 <!--POST-SHADOWAREA-->
 <div id="storeArea">
+<div title="Amending git commits" modifier="Don" created="201002242034" tags="git commit amend" changecount="1">
+<pre>If you want to change the authour:
+{{{
+git commit --amend --author=&quot;Donovan Jones &lt;something@else&gt;&quot;
+}}}</pre>
+</div>
 <div title="Ammending a git commit" modifier="Don" created="201002180426" modified="201002180448" tags="git commit ammend" changecount="3">
 <pre>!!problem
 you forgot to add a file to a commit or you want to change what you commited to a particular file
@@ -521,7 +527,7 @@ $ git add missing.file
 $ git commit --amend
 }}}</pre>
 </div>
-<div title="Bash Scripting" modifier="Don" created="201002232129" modified="201002232137" tags="loop bash script if for" changecount="2">
+<div title="Bash Scripting" modifier="Don" created="201002232129" modified="201002232156" tags="loop bash script if for" changecount="3">
 <pre>!! test [ ] construct
 * see page 117 of learning the bash shell
 
@@ -545,7 +551,7 @@ on command line:
 {{{
 $ for foo in a b c d e ; do echo $foo ; done
 
-$ for comp in changes.mhtml racerecords.mhtml racerlink_byentry.mhtml runnerperformance.mhtml wins.mhtml ; do  echo == $comp == ; grep -Rl $comp * ; done
+$ for comp in changes.mhtml records.mhtml link_entry.mhtml performance.mhtml wins.mhtml ; do  echo == $comp == ; grep -Rl $comp * ; done
  
 $ for i in `ls /sbin`; do file /sbin/$i | grep ASCII; done
 
@@ -592,6 +598,40 @@ $ date +%s
 <div title="DefaultTiddlers" modifier="Don" created="201002232122" changecount="1">
 <pre>[[Github todo]]</pre>
 </div>
+<div title="Deleting something on a remote git repo" modifier="Don" created="201002240407" tags="delete git push remote" changecount="1">
+<pre>push nothing to the remote repo
+{{{
+don@atmos(release-1.118):~/tab/releases/tab$ git push origin :refs/tags/releases-1.118.0
+}}}</pre>
+</div>
+<div title="Git branching" modifier="Don" created="201002240406" tags="git branch git-branch delete" changecount="1">
+<pre>!!git branch
+With no arguments given a list of existing branches will be shown, the current branch will be highlighted with an asterisk. Option -r causes the remote-tracking branches to be listed, and option -a shows both.
+!! example
+I generally like to do this 
+{{{
+$ git branch release-1.75 
+$ git checkout release-1.75
+$ git push origin refs/heads/release-1.75:refs/heads/release-1.75
+$ git config branch.release-1.75.merge refs/heads/release-1.75
+}}}
+
+To check this branch out in another repository
+{{{
+$ git pull
+$ git branch --track release-1.75 origin/release-1.75
+}}}
+!! branching from a previous commit
+{{{
+git branch [--track | --no-track] [-l] [-f] &lt;branchname&gt; [&lt;start-point&gt;]
+}}}
+In its second form, a new branch named &lt;branchname&gt; will be created. It will start out with a head equal to the one given as &lt;start-point&gt;. If no &lt;start-point&gt; is given, the branch will be created with a head equal to that of the currently checked out branch.
+!! deleting a branch
+{{{
+$ git branch -D release-1.132
+$ git push origin :release-1.132
+}}}</pre>
+</div>
 <div title="Git branching from an older commit" modifier="Don" created="201002190052" tags="git branch checkout commit hash" changecount="1">
 <pre>!!problem
 you want to branch from some arbitrary commit in the past
@@ -606,6 +646,16 @@ eg:
 $ git branch release-1.147 741e26d9f3c1fce50a5c80625b4f9c3dcee8f608
 $ git checkout release-1.147
 }}}</pre>
+</div>
+<div title="Git email patches" modifier="Don" created="201002240035" tags="git email patch" changecount="1">
+<pre>!!For Koha
+{{{
+$ git format-patch -N upstream/originmaster
+0001-Bug-2505-remove-unnecessary-w-and-replace-with-us.patch
+$ sudo apt-get install git-email
+$ git send-email 0001-Bug-2505-remove-unnecessary-w-and-replace-with-us.patch
+}}}
+the questions are pretty strait forward, answer them.</pre>
 </div>
 <div title="Git pull doesnt know merge branch" modifier="Don" created="201002170146" tags="git config pull" changecount="1">
 <pre>!!Problem
@@ -640,7 +690,7 @@ $ git config branch.master.merge refs/heads/master
 }}}
 </pre>
 </div>
-<div title="Github forking" modifier="Don" created="201002230438" modified="201002232032" tags="git fork remote upstream checkout" changecount="2">
+<div title="Github forking" modifier="Don" created="201002230438" modified="201002241959" tags="git fork remote upstream checkout github" changecount="3">
 <pre>{{{
 $ git remote add upstream git://github.com/ranginui/koha.git
 $ git fetch upstream
@@ -771,8 +821,10 @@ $(&quot;select#mm-eventselector2&quot;).change(foobar);
 $(&quot;select#mm-eventselector3&quot;).change(foobar);
 }}}</pre>
 </div>
-<div title="KOHA TODO" modifier="Don" created="201002232121" tags="koha todo" changecount="1">
-<pre>* work on bug 2505
+<div title="KOHA TODO" modifier="Don" created="201002232121" modified="201002240033" tags="koha todo" changecount="3">
+<pre>* change email to koha@gamma.net.nz
+* fixup home env
+* work on bug 2505
 * trailing whitespace
 * SQL formating</pre>
 </div>
@@ -849,6 +901,68 @@ q
 @@
 }}}
 to repeat</pre>
+</div>
+<div title="find commands" modifier="Don" created="201002240320" modified="201002240322" tags="find command" changecount="2">
+<pre>!!Find
+* http://dmiessler.com/study/nix/commands/find/
+find jquery in mason files ignoring doc dir
+{{{
+find . -regextype posix-extended -name doc -prune -o -type f -regex '.*\.(html|mhtml|autohandler|syshandler|dhandler)$' | xargs grep 'jquery'
+}}}
+grep for the string style in the current dir but ignore files in the doc dir.
+{{{
+$ find . -name doc -prune -o -type f -name '*.html' | xargs grep style
+}}}
+perl scripts written in the last 20 days:
+{{{
+$ find . -type f -mtime -20 -name '*.pl'
+}}}
+files bigger than
+{{{
+# find /data/webdav/content/ -name &quot;*_$(date -d '-12 months' '+%Y_%m')_*.pdf&quot; -ls
+}}}
+Find all files not owned by www-data
+{{{
+# find . ! -user www-data
+}}}
+Find all files with permissions of 600 (and change permissions to 644)
+{{{
+$ find . -perm 600
+$ find . -perm 600 -exec chmod 644 {} \;
+}}}
+find all files with 'procedur' in the name less than 400 days old  and list them
+{{{
+$ find . -iname '*procedur*' -mtime -400 -ls
+}}}
+find all files of type *.tmpl and change owner
+{{{
+$ find . -iname '*.tmpl' -user don -exec chown www-data:www-data {} \;
+}}}
+change all regular files to 664
+{{{
+$ find repo-name.git/ -type f -exec chmod 664 {} \;
+}}}
+change all dirs to 775
+{{{
+$ find repo-name.git/ -type d -exec chmod 775 {} \;
+}}}
+find all files named cvs 
+{{{
+$ find -type d -name CVS
+}}}
+find all files modified in the last 7 days
+{{{
+$ find . -mtime -7 -type f | xargs ls -lh
+}}}
+find all files modified longer that 90 days ago and del
+{{{
+$ find /data/emailspool -mtime +90 -print0 | xargs -0 /bin/rm -f &amp;&gt;/dev/null
+}}}
+find and delete empty directories from the current dir
+{{{
+$ find -depth -type d -empty -exec rmdir {} \;
+}}}
+see: http://duramecho.com/ComputerPrograms/DeleteEmptyDirectories/index.html</pre>
 </div>
 <div title="psql nulls" modifier="Don" created="201002222300" tags="null psql sql postgres pset" changecount="1">
 <pre>To make psql display something for nulls use pset:
