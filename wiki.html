@@ -581,6 +581,11 @@ Firstly you should have the same ssh key and then you should clone the repo usin
 $ git clone git@github.com:donovan/repo-name.git
 }}}</pre>
 </div>
+<div title="Command line psql" modifier="Don" created="201004132220" tags="psql command-line [[command line]] postgres" changecount="1">
+<pre>get the commands to implement from a file
+{{{
+}}}</pre>
+</div>
 <div title="Date Commands" modifier="Don" created="201002180109" tags="date" changecount="1">
 <pre>To display the date in iso format:
 {{{
@@ -804,6 +809,12 @@ Generally, block elements create &quot;larger&quot; structures than inline eleme
 &lt;input type=submit value=&quot;Test this form&quot;&gt;
 Submit button can change the words using the value attribute</pre>
 </div>
+<div title="Image Maps" modifier="Don" created="201004150020" tags="kimagemapeditor image map imagemap [[image map]]" changecount="1">
+<pre>{{{
+$ kimagemapeditor Betting-Voucher-image.jpg
+}}}
+use the rectangle tool to select an area and then goto the menu item map &gt; show html, you can then see the coords</pre>
+</div>
 <div title="JQuery Cookbook" modifier="Don" created="201002150231" modified="201002150233" tags="js jquery javascript function cookbook" changecount="2">
 <pre>!!Problem
 You want to call a the same function from a number of different places
@@ -828,7 +839,7 @@ $(&quot;select#mm-eventselector3&quot;).change(foobar);
 * trailing whitespace
 * SQL formating</pre>
 </div>
-<div title="Perl DBI Cookbook" modifier="Don" created="201002180305" tags="perl dbi cookbook" changecount="1">
+<div title="Perl DBI Cookbook" modifier="Don" created="201002180305" modified="201004122339" tags="perl dbi cookbook" changecount="4">
 <pre>when you want an array that corresponds to all the values in a column do:
 {{{
 my $used_codes = $DBH-&gt;selectcol_arrayref('SELECT DISTINCT sms_code FROM tc_promo');
@@ -837,15 +848,15 @@ foreach my $code (@$used_codes) {}
 when you want one particular value to put into a variable do: 
 {{{
 my $last_id = $dbh-&gt;selectrow_array('SELECT id FROM person WHERE name=?', undef, 'foobar');
-$dyk = $DBH-&gt;selectrow_array(&quot;SELECT content FROM multinews_content WHERE content_type = 'did_you_know'&quot;);
+$dyk = $DBH-&gt;selectrow_array(&quot;SELECT content FROM content WHERE content_type = 'did_you_know'&quot;);
 }}}
 when you want more than one value from a single row:
 {{{
-my ($label_1, $text_1, $label_2, $text_2) = $DBH-&gt;selectrow_array('SELECT label1,text1,label2,text2 FROM rc_race_insights WHERE rc_race_id=?', undef, $raceid);
+my ($label_1, $text_1, $label_2, $text_2) = $DBH-&gt;selectrow_array('SELECT label1,text1,label2,text2 FROM insights WHERE rc_race_id=?', undef, $id);
 }}}
 when you want multiple rows from the database with the ordering preserved:
 {{{
-my $regions = $DBH-&gt;selectall_arrayref(&quot;SELECT id, region_name FROM dshr_regions ORDER BY quarter LIKE '%North%' DESC, icon_y&quot;, { Slice =&gt; {} });
+my $regions = $DBH-&gt;selectall_arrayref(&quot;SELECT id, region_name FROM regions ORDER BY quarter LIKE '%North%' DESC, icon_y&quot;, { Slice =&gt; {} });
 foreach my $region ( @$regions ) {
 &lt;option value=&quot;&lt;% $region-&gt;{id} | h %&gt;&quot;&gt;&lt;% $region-&gt;{region_name} | h %&gt;&lt;/option&gt;
 }
@@ -861,15 +872,15 @@ when you want to select multiple rows and use the first and last rows (eg where 
         f.url,
         f.name
     FROM
-        dshr_event e
+        event e
     JOIN
-        dshr_festival f ON e.dshr_festival_id=f.id
+        festival f ON e.id=f.id
     WHERE
         e.event_type = 'Festival'
     AND
         e.visible = TRUE
     AND
-        e.dshr_festival_id=?
+        e.id=?
     ORDER BY
         e.date
     &quot;, { Slice =&gt; {} }, $id);
@@ -880,7 +891,26 @@ when you want to select multiple rows and use the first and last rows (eg where 
         &lt;p&gt;Date: &lt;% $m-&gt;comp('/the-races/comp/date_link.mhtml', url =&gt; 'none', start =&gt; $festival-&gt;[0]{date}, end =&gt; $festival-&gt;[-1]{date}) %&gt;&lt;/p&gt;
 }}}
 
+When you wish to grab multiple rows and put it into a single variable you should use one of the selectall_ methods
+
+selectall_arrayref gives you an arrayref with all the rows which you can then loop over:
+{{{
+my $emps = $dbh-&gt;selectall_arrayref( &quot;SELECT ename FROM emp ORDER BY ename&quot;, { Slice =&gt; {} } );
+foreach my $emp ( @$emps ) { print &quot;Employee: $emp-&gt;{ename}\n&quot;; }
+}}}
+selectall_hashref gives you a hashref keyed with a key field that you select, you can also use multiple fields to make a nested hash, one thig to be aware of is if your key is not unique then it will be overwritten so you will only have the last instance of that row.
+
+{{{
+$hash_ref = $dbh-&gt;selectall_hashref($statement, $key_field);
+}}}
+
 see also: http://wellington.pm.org/archive/200806/martyn-dbi/slide009.html and perldoc DBI</pre>
+</div>
+<div title="Selecting boolean values" modifier="Don" created="201004140312" tags="boolean select postgres sql" changecount="1">
+<pre>When you want other values to appear where you are selecting from a boolean col then:
+{{{
+CASE future_contact WHEN TRUE THEN 'Yes' ELSE 'No' END AS future_contact,
+}}}</pre>
 </div>
 <div title="SiteSubtitle" modifier="Don" created="201002150348" changecount="1">
 <pre>lots of documentation for all the family</pre>
@@ -963,6 +993,14 @@ find and delete empty directories from the current dir
 $ find -depth -type d -empty -exec rmdir {} \;
 }}}
 see: http://duramecho.com/ComputerPrograms/DeleteEmptyDirectories/index.html</pre>
+</div>
+<div title="postgres escaping quotes" modifier="Don" created="201004132237" tags="quotes escape escaping postgres sql" changecount="1">
+<pre>the correct sql way to escape quotes is with two quotes
+{{{
+$field =~ s{'}{''}gxms;
+}}}
+
+* http://www.postgresql.org/docs/8.1/interactive/sql-syntax.html#SQL-SYNTAX-CONSTANTS</pre>
 </div>
 <div title="psql nulls" modifier="Don" created="201002222300" tags="null psql sql postgres pset" changecount="1">
 <pre>To make psql display something for nulls use pset:
