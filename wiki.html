@@ -609,6 +609,12 @@ $ date +%s
 don@atmos(release-1.118):~/tab/releases/tab$ git push origin :refs/tags/releases-1.118.0
 }}}</pre>
 </div>
+<div title="Git Cookbook" modifier="Don" created="201004192319" tags="git cookbook" changecount="1">
+<pre>You want to reset a branch to be the same as a remote one, you don't care about whats on your local branch you just want to make it the same as the remote one. Make sure you are on the right branch and then do a hard reset:
+{{{
+don@atmos(master):~/koha$ git reset --hard origin/master
+}}}</pre>
+</div>
 <div title="Git branching" modifier="Don" created="201002240406" tags="git branch git-branch delete" changecount="1">
 <pre>!!git branch
 With no arguments given a list of existing branches will be shown, the current branch will be highlighted with an asterisk. Option -r causes the remote-tracking branches to be listed, and option -a shows both.
@@ -838,6 +844,15 @@ $(&quot;select#mm-eventselector3&quot;).change(foobar);
 * work on bug 2505
 * trailing whitespace
 * SQL formating</pre>
+</div>
+<div title="Koha dev" modifier="Don" created="201004160230" tags="koha" changecount="1">
+<pre>Handy commands for when doing koha development
+==Bug 2505==
+{{{
+$ diff &lt;(find -name '*.pl') &lt;(find . -name '*.pl' -print0 | xargs -0 egrep -l '^use warnings') | grep '&lt;' | wc -l
+$ for file in `git status | grep modified | awk '{print $3}'`; do grep warnings $file; done
+map ,u /use strict&lt;CR&gt;o#use warnings; FIXME - Bug 2505&lt;Esc&gt;
+}}}</pre>
 </div>
 <div title="Perl DBI Cookbook" modifier="Don" created="201002180305" modified="201004122339" tags="perl dbi cookbook" changecount="4">
 <pre>when you want an array that corresponds to all the values in a column do:
