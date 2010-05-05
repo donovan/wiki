@@ -586,6 +586,34 @@ $ git clone git@github.com:donovan/repo-name.git
 {{{
 }}}</pre>
 </div>
+<div title="DSH Examples" modifier="Don" created="201005042014" modified="201005042016" tags="dsh ssh remote command" changecount="2">
+<pre>dsh  executes command remotely on several different machines at the same time. It uses groups that are defined in .dsh/group
+{{{
+don@atmos(1):~/.dsh/group$ ls
+all  dr-db  dr-fw  dr-web  prod-all  prod-db  prod-fw  prod-web  staging  staging-dbs
+don@atmos(1):~/.dsh/group$ dsh -g prod-web 'echo ------------------------- `hostname` -------------------------- &amp;&amp; cat /proc/cpuinfo | grep MHz'
+------------------------- prod1 --------------------------
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+------------------------- prod2 --------------------------
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+------------------------- prod3 --------------------------
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+------------------------- prod4 --------------------------
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+cpu MHz		: 1000.000
+}}}</pre>
+</div>
 <div title="Date Commands" modifier="Don" created="201002180109" tags="date" changecount="1">
 <pre>To display the date in iso format:
 {{{
@@ -609,28 +637,36 @@ $ date +%s
 don@atmos(release-1.118):~/tab/releases/tab$ git push origin :refs/tags/releases-1.118.0
 }}}</pre>
 </div>
-<div title="Git Cookbook" modifier="Don" created="201004192319" tags="git cookbook" changecount="1">
+<div title="Git Cookbook" modifier="Don" created="201004192319" modified="201004192340" tags="git cookbook" changecount="2">
 <pre>You want to reset a branch to be the same as a remote one, you don't care about whats on your local branch you just want to make it the same as the remote one. Make sure you are on the right branch and then do a hard reset:
 {{{
 don@atmos(master):~/koha$ git reset --hard origin/master
+}}}
+You want to make a new branch both locally and on the remote:
+{{{
+$ git checkout -b newbranch
+$ git push origin refs/heads/newbranch:refs/heads/newbranch
+$ git config branch.newbranch.merge refs/heads/newbranch
+$ git config branch.newbranch.remote origin
+$ git config -l
 }}}</pre>
 </div>
-<div title="Git branching" modifier="Don" created="201002240406" tags="git branch git-branch delete" changecount="1">
+<div title="Git branching" modifier="Don" created="201002240406" modified="201004230213" tags="git branch git-branch delete" changecount="3">
 <pre>!!git branch
 With no arguments given a list of existing branches will be shown, the current branch will be highlighted with an asterisk. Option -r causes the remote-tracking branches to be listed, and option -a shows both.
 !! example
 I generally like to do this 
 {{{
-$ git branch release-1.75 
-$ git checkout release-1.75
-$ git push origin refs/heads/release-1.75:refs/heads/release-1.75
-$ git config branch.release-1.75.merge refs/heads/release-1.75
+$ git checkout -b newbranch
+$ git push origin refs/heads/newbranch:refs/heads/newbranch
+$ git config branch.newbranch.merge refs/heads/newbranch
+$ git config branch.newbranch.remote origin
 }}}
 
 To check this branch out in another repository
 {{{
 $ git pull
-$ git branch --track release-1.75 origin/release-1.75
+$ git branch --track newbranch origin/newbranch
 }}}
 !! branching from a previous commit
 {{{
@@ -639,8 +675,8 @@ git branch [--track | --no-track] [-l] [-f] &lt;branchname&gt; [&lt;start-point&
 In its second form, a new branch named &lt;branchname&gt; will be created. It will start out with a head equal to the one given as &lt;start-point&gt;. If no &lt;start-point&gt; is given, the branch will be created with a head equal to that of the currently checked out branch.
 !! deleting a branch
 {{{
-$ git branch -D release-1.132
-$ git push origin :release-1.132
+$ git branch -D newbranch
+$ git push origin :newbranch
 }}}</pre>
 </div>
 <div title="Git branching from an older commit" modifier="Don" created="201002190052" tags="git branch checkout commit hash" changecount="1">
@@ -815,6 +851,29 @@ Generally, block elements create &quot;larger&quot; structures than inline eleme
 &lt;input type=submit value=&quot;Test this form&quot;&gt;
 Submit button can change the words using the value attribute</pre>
 </div>
+<div title="IRC and Irssi commands" modifier="Don" created="201005052148" tags="irc irssi" changecount="1">
+<pre>When you want to move a window to another numbered window:
+{{{
+/win move 4
+}}}
+operator status
+{{{
+/mode #zog +oo foobar  rumple
+/mode #zog +o foobar
+/op foobar
+}}}
+Connect to another server without dropping the connection to your current server.
+{{{
+ /connect irc.freenode.net
+}}}
+topic
+{{{
+/topic LAST Foobar before Winter this THURSDAY ... leaving 17:00
+}}}
+
+!!IRSSI
+* http://f0rked.com/public/irssi-docs/help-full.html</pre>
+</div>
 <div title="Image Maps" modifier="Don" created="201004150020" tags="kimagemapeditor image map imagemap [[image map]]" changecount="1">
 <pre>{{{
 $ kimagemapeditor Betting-Voucher-image.jpg
@@ -854,7 +913,7 @@ $ for file in `git status | grep modified | awk '{print $3}'`; do grep warnings 
 map ,u /use strict&lt;CR&gt;o#use warnings; FIXME - Bug 2505&lt;Esc&gt;
 }}}</pre>
 </div>
-<div title="Perl DBI Cookbook" modifier="Don" created="201002180305" modified="201004122339" tags="perl dbi cookbook" changecount="4">
+<div title="Perl DBI Cookbook" modifier="Don" created="201002180305" modified="201004280311" tags="perl dbi cookbook" changecount="5">
 <pre>when you want an array that corresponds to all the values in a column do:
 {{{
 my $used_codes = $DBH-&gt;selectcol_arrayref('SELECT DISTINCT sms_code FROM tc_promo');
@@ -913,13 +972,25 @@ selectall_arrayref gives you an arrayref with all the rows which you can then lo
 my $emps = $dbh-&gt;selectall_arrayref( &quot;SELECT ename FROM emp ORDER BY ename&quot;, { Slice =&gt; {} } );
 foreach my $emp ( @$emps ) { print &quot;Employee: $emp-&gt;{ename}\n&quot;; }
 }}}
-selectall_hashref gives you a hashref keyed with a key field that you select, you can also use multiple fields to make a nested hash, one thig to be aware of is if your key is not unique then it will be overwritten so you will only have the last instance of that row.
+selectall_hashref gives you a hashref keyed with a key field that you select, you can also use multiple fields to make a nested hash, one thing to be aware of is if your key is not unique then it will be overwritten so you will only have the last instance of that row.
 
 {{{
 $hash_ref = $dbh-&gt;selectall_hashref($statement, $key_field);
 }}}
 
 see also: http://wellington.pm.org/archive/200806/martyn-dbi/slide009.html and perldoc DBI</pre>
+</div>
+<div title="Postgres Sequences" modifier="Don" created="201004270254" tags="postgres sequence nextval currval setval lastval" changecount="1">
+<pre>nextval
+currval
+setval
+lastval
+{{{
+SELECT setval('seq_event', max(id)) FROM event;
+INSERT INTO poll_answer (poll_id, answer, displayorder) VALUES (CURRVAL('seq_poll'), 'New Look', 1);
+}}}
+* http://www.postgresql.org/docs/8.1/interactive/functions-sequence.html
+* http://www.postgresql.org/docs/8.1/interactive/sql-createsequence.html</pre>
 </div>
 <div title="Selecting boolean values" modifier="Don" created="201004140312" tags="boolean select postgres sql" changecount="1">
 <pre>When you want other values to appear where you are selecting from a boolean col then:
