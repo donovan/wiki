@@ -628,8 +628,8 @@ $ date +%s
 1266453486
 }}}</pre>
 </div>
-<div title="DefaultTiddlers" modifier="Don" created="201002232122" changecount="1">
-<pre>[[Github todo]]</pre>
+<div title="DefaultTiddlers" modifier="Don" created="201002232122" modified="201005172309" changecount="2">
+<pre></pre>
 </div>
 <div title="Deleting something on a remote git repo" modifier="Don" created="201002240407" tags="delete git push remote" changecount="1">
 <pre>push nothing to the remote repo
@@ -871,6 +871,12 @@ Generally, block elements create &quot;larger&quot; structures than inline eleme
 &lt;input type=submit value=&quot;Test this form&quot;&gt;
 Submit button can change the words using the value attribute</pre>
 </div>
+<div title="Hashes" modifier="Don" created="201005062130" tags="md5 md5sum hash" changecount="1">
+<pre>To get the md5 of a string you need to use echo -n or you end up hashing the string plus the newline:
+{{{
+echo -n 'password' | md5sum
+}}}</pre>
+</div>
 <div title="IRC and Irssi commands" modifier="Don" created="201005052148" tags="irc irssi" changecount="1">
 <pre>When you want to move a window to another numbered window:
 {{{
@@ -1011,6 +1017,25 @@ INSERT INTO poll_answer (poll_id, answer, displayorder) VALUES (CURRVAL('seq_pol
 }}}
 * http://www.postgresql.org/docs/8.1/interactive/functions-sequence.html
 * http://www.postgresql.org/docs/8.1/interactive/sql-createsequence.html</pre>
+</div>
+<div title="Postgres dates" modifier="Don" created="201005060347" modified="201005170413" tags="date time timestamp unix postgres" changecount="3">
+<pre>select as unix timestmap
+{{{
+SELECT EXTRACT(EPOCH FROM inserted) AS inserted FROM log;
+}}}
+!! Formating the date
+use the to_char formating function
+{{{
+to_char(f.inserted, 'HH24:MI FMdd Mon yyyy')
+}}}
+examples
+{{{
+FMDy, FMdd Mon yyyy HH24:MI:SS TZ =&gt; Mon, 19 Apr 2010 00:00:00 NZST
+}}}
+
+* http://www.postgresql.org/docs/8.1/interactive/datatype-datetime.html
+* http://www.postgresql.org/docs/8.1/interactive/functions-datetime.html
+* http://www.postgresql.org/docs/8.1/interactive/functions-formatting.html</pre>
 </div>
 <div title="Selecting boolean values" modifier="Don" created="201004140312" tags="boolean select postgres sql" changecount="1">
 <pre>When you want other values to appear where you are selecting from a boolean col then:
