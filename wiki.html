@@ -637,7 +637,7 @@ $ date +%s
 don@atmos(release-1.118):~/tab/releases/tab$ git push origin :refs/tags/releases-1.118.0
 }}}</pre>
 </div>
-<div title="Git Cookbook" modifier="Don" created="201004192319" modified="201005170754" tags="git cookbook" changecount="4">
+<div title="Git Cookbook" modifier="Don" created="201004192319" modified="201005172313" tags="git cookbook" changecount="5">
 <pre>You want to reset a branch to be the same as a remote one, you don't care about whats on your local branch you just want to make it the same as the remote one. Make sure you are on the right branch and then do a hard reset:
 {{{
 ~/koha$ git reset --hard origin/master
@@ -650,7 +650,7 @@ $ git config branch.newbranch.merge refs/heads/newbranch
 $ git config branch.newbranch.remote origin
 $ git config -l
 }}}
-getting rid of warning messages on git push
+You get warning messages every time you try and push and you want to get rid of them.
 {{{
 $ git push
 warning: You did not specify any refspecs to push, and the current remote
