@@ -581,6 +581,91 @@ Firstly you should have the same ssh key and then you should clone the repo usin
 $ git clone git@github.com:donovan/repo-name.git
 }}}</pre>
 </div>
+<div title="Command Line HTTP" modifier="Don" created="201005172341" modified="201005172350" tags="command-line [[command line]] http wget nc perl curl netcat" changecount="4">
+<pre>!!!copy lots of files
+{{{
+$ lftp -c 'mirror http://superhost/bob/Makara-Peak-2009-09-05/'
+$ wget http://superhost/bob/Taupo-2009/IMG_0{667..687}.JPG
+}}}
+!!!wget
+html to stdout
+{{{
+$ wget -q -O - http://foo.co.nz | head
+}}}
+!!!curl
+diff dr and prod versions of a page
+{{{
+diff &lt;(curl -s http://xml.foo.co.nz/schedule/) &lt;(curl -s http://dr-lb.foo.co.nz/schedule/ -H 'Host: xml.foo.co.nz')
+}}}
+html to stdout with no error messages
+{{{
+$ curl -s http://static.dev.foo.co.nz/foo.js | head
+}}}
+include the header in the output
+{{{
+$ curl -i http://staging.foobar.co.nz/
+}}}
+get headers ie HEAD
+{{{
+$ curl -I  http://staging.foobar.co.nz/
+}}}
+!!!nc
+{{{
+$ nc foo.co.nz 80
+GET / HTTP/1.0/r/n/r/n
+HEAD / HTTP/1.0/r/n/r/n
+}}}
+!!!LWP
+{{{
+$ HEAD foo.co.nz
+$ GET http://static.foo.co.nz/foo.js | grep 'var foo_url'
+}}}
+
+!!CONNECT and TRACE Methods
+!!!connect
+Converts the request connection to a transparent TCP/IP tunnel, usually to facilitate SSL-encrypted communication (HTTPS) through an unencrypted HTTP proxy.
+note newer versions of squid seems to be giving a 400 to all CONNECTS rather than denying with a 403
+http://www.kb.cert.org/vuls/id/150227
+{{{
+$ nc staging.foo.co.nz 80
+CONNECT 192.168.141.95:81 HTTP/1.0
+}}}
+{{{
+$ ./pxytest.pl -M smtp1.foobar.net.nz foo.co.nz
+Using mail server: 292.89.132.50 (smtp1.foobar.net.nz)
+Testing addr &quot;foo.co.nz&quot; port &quot;80&quot; proto &quot;http-connect&quot; ... connected
+&gt;&gt;&gt; CONNECT 292.89.132.50:25 HTTP/1.0\r\n\r\n
+&lt;&lt;&lt; HTTP/1.0 403 Forbidden\r\n
+}}}
+!!!trace
+Echoes back the received request, so that a client can see what intermediate servers are adding or changing in the request.
+{{{
+$ nc staging.foo.co.nz 80
+TRACE / HTTP/1.0
+
+HTTP/1.0 403 Forbidden
+Server: squid/2.6.STABLE5
+Date: Wed, 02 Apr 2008 21:40:44 GMT
+Content-Type: text/html
+Content-Length: 1093
+Expires: Wed, 02 Apr 2008 21:40:44 GMT
+X-Squid-Error: ERR_ACCESS_DENIED 0
+X-Cache: MISS from staging-web.foobar.net.nz
+X-Cache-Lookup: NONE from staging-web.foobar.net.nz:81
+Via: 1.0 staging-web.foobar.net.nz:81 (squid/2.6.STABLE5)
+Connection: close
+
+}}}
+
+!!PURGE Method
+Specific to squid, allows purging of any object in the cache. Should be limited to localhost or similar
+
+!!Disable signature/banner
+{{{
+ServerSignature Off
+ServerTokens Prod
+}}}</pre>
+</div>
 <div title="Command line psql" modifier="Don" created="201004132220" tags="psql command-line [[command line]] postgres" changecount="1">
 <pre>get the commands to implement from a file
 {{{
