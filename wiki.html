@@ -637,10 +637,10 @@ $ date +%s
 don@atmos(release-1.118):~/tab/releases/tab$ git push origin :refs/tags/releases-1.118.0
 }}}</pre>
 </div>
-<div title="Git Cookbook" modifier="Don" created="201004192319" modified="201004192340" tags="git cookbook" changecount="2">
+<div title="Git Cookbook" modifier="Don" created="201004192319" modified="201005170754" tags="git cookbook" changecount="4">
 <pre>You want to reset a branch to be the same as a remote one, you don't care about whats on your local branch you just want to make it the same as the remote one. Make sure you are on the right branch and then do a hard reset:
 {{{
-don@atmos(master):~/koha$ git reset --hard origin/master
+~/koha$ git reset --hard origin/master
 }}}
 You want to make a new branch both locally and on the remote:
 {{{
@@ -649,6 +649,26 @@ $ git push origin refs/heads/newbranch:refs/heads/newbranch
 $ git config branch.newbranch.merge refs/heads/newbranch
 $ git config branch.newbranch.remote origin
 $ git config -l
+}}}
+getting rid of warning messages on git push
+{{{
+$ git push
+warning: You did not specify any refspecs to push, and the current remote
+warning: has not configured any push refspecs. The default action in this
+warning: case is to push all matching refspecs, that is, all branches
+warning: that exist both locally and remotely will be updated.  This may
+warning: not necessarily be what you want to happen.
+warning: 
+warning: You can specify what action you want to take in this case, and
+warning: avoid seeing this message again, by configuring 'push.default' to:
+warning:   'nothing'  : Do not push anything
+warning:   'matching' : Push all matching branches (default)
+warning:   'tracking' : Push the current branch to whatever it is tracking
+warning:   'current'  : Push the current branch
+$ git branch -a
+* master
+  remotes/origin/master
+$ git config push.default matching
 }}}</pre>
 </div>
 <div title="Git branching" modifier="Don" created="201002240406" modified="201004230213" tags="git branch git-branch delete" changecount="3">
