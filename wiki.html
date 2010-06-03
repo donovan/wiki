@@ -1103,10 +1103,14 @@ INSERT INTO poll_answer (poll_id, answer, displayorder) VALUES (CURRVAL('seq_pol
 * http://www.postgresql.org/docs/8.1/interactive/functions-sequence.html
 * http://www.postgresql.org/docs/8.1/interactive/sql-createsequence.html</pre>
 </div>
-<div title="Postgres dates" modifier="Don" created="201005060347" modified="201005170413" tags="date time timestamp unix postgres" changecount="3">
+<div title="Postgres dates" modifier="Don" created="201005060347" modified="201006032329" tags="date time timestamp unix postgres" changecount="4">
 <pre>select as unix timestmap
 {{{
 SELECT EXTRACT(EPOCH FROM inserted) AS inserted FROM log;
+}}}
+get a future date
+{{{
+SELECT (current_timestamp + '7 days'::interval)::date AS date_in_seven_days;
 }}}
 !! Formating the date
 use the to_char formating function
