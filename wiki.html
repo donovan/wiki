@@ -527,6 +527,18 @@ $ git add missing.file
 $ git commit --amend
 }}}</pre>
 </div>
+<div title="Bash Expansion" modifier="YourName" created="201006250039" tags="bash expansion" changecount="1">
+<pre>http://bash-hackers.org/wiki/doku.php/syntax/expansion/intro
+
+examples:
+{{{
+$ for dir in .wrms .bugzilla .cron .spam ; do mkdir $dir/{cur,tmp,new} ; done
+$ for dir in .wrms .bugzilla .cron .spam ; do chmod 700 $dir/{cur,tmp,new} ; done
+}}}
+{{{
+$ for file in {1..17} ; do ls -l NZRB_insiderunning_$file.pdf ; done
+}}}</pre>
+</div>
 <div title="Bash Scripting" modifier="Don" created="201002232129" modified="201002232156" tags="loop bash script if for" changecount="3">
 <pre>!! test [ ] construct
 * see page 117 of learning the bash shell
@@ -721,6 +733,48 @@ $ date +%s
 {{{
 don@atmos(release-1.118):~/tab/releases/tab$ git push origin :refs/tags/releases-1.118.0
 }}}</pre>
+</div>
+<div title="Exim commands" modifier="YourName" created="201006210359" modified="201007120022" tags="exim email mta" changecount="2">
+<pre>!!Commands
+
+Check message details body, header,
+{{{
+ # exim4 -bp | grep frozen | awk '{print $3}'
+ # exim4 -Mvb 19smtY-0000Fu-00 # body
+ # exim4 -Mvh 19smtY-0000Fu-00 # headers
+ # exim4 -Mvl 19smtY-0000Fu-00 # logs
+ # exim4 -Mrm 1BTVk5-00041U-00 # rm
+ # exim4 -Mg 1BTVk5-00041U-00 # bounce
+}}}
+List the runtime configuration file
+{{{
+ # exim4 -bP configure_file
+}}}
+get info on Exim's main configuration options
+{{{
+ # exim4 -bP
+}}}
+Flush queue:
+{{{
+ # exim4 -qff
+}}}
+Address verification (sender/reciever)
+{{{
+ # exim4 -bvs homer@comnet.co.nz
+ # exim4 -bv homer@comnet.co.nz
+}}}
+reconfigure exim using the debian tools
+{{{
+ # dpkg-reconfigure exim4-config
+}}}
+
+!!Debian exim
+
+The Debian exim4 packages can either use &quot;unsplit configuration&quot;, a single monolithic file (/etc/exim4/exim4.conf.template) or &quot;split configuration&quot;, where the actual Exim configuration files are built from about 50 smaller files in /etc/exim4/conf.d/.                                                               
+
+Unsplit configuration is better suited for large modifications and is generally more stable, whereas split configuration offers a comfortable way to make smaller modifications but is more fragile and might break if modified carelessly.                                                                       
+                                                                       
+A more detailed discussion of split and unsplit configuration can be found in /usr/share/doc/exim4-base/README.Debian.</pre>
 </div>
 <div title="Git Cookbook" modifier="Don" created="201004192319" modified="201005172313" tags="git cookbook" changecount="5">
 <pre>You want to reset a branch to be the same as a remote one, you don't care about whats on your local branch you just want to make it the same as the remote one. Make sure you are on the right branch and then do a hard reset:
@@ -1125,6 +1179,9 @@ FMDy, FMdd Mon yyyy HH24:MI:SS TZ =&gt; Mon, 19 Apr 2010 00:00:00 NZST
 * http://www.postgresql.org/docs/8.1/interactive/datatype-datetime.html
 * http://www.postgresql.org/docs/8.1/interactive/functions-datetime.html
 * http://www.postgresql.org/docs/8.1/interactive/functions-formatting.html</pre>
+</div>
+<div title="SQL JOINS" modifier="YourName" created="201007010310" tags="sql join" changecount="1">
+<pre>http://www.codinghorror.com/blog/2007/10/a-visual-explanation-of-sql-joins.html</pre>
 </div>
 <div title="Selecting boolean values" modifier="Don" created="201004140312" tags="boolean select postgres sql" changecount="1">
 <pre>When you want other values to appear where you are selecting from a boolean col then:
