@@ -683,6 +683,86 @@ ServerTokens Prod
 {{{
 }}}</pre>
 </div>
+<div title="DNS" modifier="Don" created="201007140345" tags="dns host bind dig named" changecount="1">
+<pre>!!find version 
+{{{
+$ dig @ns1.fx.net.nz version.bind txt chaos
+$ host -t txt -c ch version.bind ns1.fx.net.nz
+}}}
+find host version
+
+see http://www.cymru.com/Documents/secure-bind-template.html on howto disable.
+!!be a nameserver
+
+{{{
+$ host -v -r www.catalyst.net.nz f.root-servers.net
+
+ ;; AUTHORITY SECTION:
+ nz.                     172800  IN      NS      NS1.DNS.net.nz.
+ nz.                     172800  IN      NS      NS2.DNS.net.nz.
+ nz.                     172800  IN      NS      NS3.DNS.net.nz.
+ nz.                     172800  IN      NS      NS4.DNS.net.nz.
+ nz.                     172800  IN      NS      NS5.DNS.net.nz.
+ nz.                     172800  IN      NS      NS6.DNS.net.nz.
+ nz.                     172800  IN      NS      NS7.DNS.net.nz.
+}}}
+
+{{{
+$ host -v -r www.catalystdemo.net.nz NS2.DNS.net.nz
+ 
+ ;; AUTHORITY SECTION:
+ catalystdemo.net.nz.    86400   IN      NS      ns3.catalyst.net.nz.
+ catalystdemo.net.nz.    86400   IN      NS      ns1.catalyst.net.nz.
+ catalystdemo.net.nz.    86400   IN      NS      ns2.catalyst.net.nz.
+}}}
+
+!!tips
+MX records MUST NOT point to a CNAME record. For example, &quot;example.com MX 10 mail.example.com&quot; can not have a corresponding record &quot;mail.example.com CNAME smtp.example.com&quot;.
+
+The correct terminology for referring to the topmost record in the zone (ie the record that corresponds to the zone itself) is the APEX record. The origin (denoted by @) points at the apex by default but can be set to something different so is not necessarily the same as the apex. Any record that does not end with a '.' is prepended to the origin. Any blank record referrers to the previous defined record.
+
+The Apex needn't have an A record associated with it and cannot be a CNAME. You can assign two A records to the Apex for round robin DNS purposes.
+!!named.conf tips
+stops notifies being sent to servers listed in the zone files NS records
+ notify no;
+
+!!os resolver
+To check the order that the os resolver library uses see: /etc/nsswitch.conf
+{{{
+ don@atmos:~$ grep ^hosts /etc/nsswitch.conf
+ hosts:          files dns
+}}}
+To query the os resolver use gethostbyname and gethostbyaddr eg:
+{{{
+ # perl -e 'use Socket; $name = gethostbyaddr(inet_aton(&quot;192.168.181.207&quot;), AF_INET) or die &quot;Cant resolve address: $!\n&quot;; print &quot;$name\n&quot;'
+}}}
+{{{
+$ perl -MSocket -e 'print inet_ntoa(scalar gethostbyname(&quot;pistons&quot;)) . &quot;\n&quot;;'
+}}}
+This is handy as host etc only query dns
+----
+* http://www.networksorcery.com/enp/protocol/dns.htm
+* http://www.dnsstuff.com/
+* http://www.knossos.net.nz/checkdomain.cgi
+* http://www.cymru.com/Documents/secure-bind-template.html</pre>
+</div>
+<div title="DNS Blackholes" modifier="Don" created="201007140346" tags="email smtp dns blackhole rbl" changecount="1">
+<pre>{{{
+ # host 80.83.100.197
+ Host 197.100.83.80.in-addr.arpa not found: 3(NXDOMAIN)
+ # host 197.100.83.80.bl.spamcop.net
+ 197.100.83.80.bl.spamcop.net has address 127.0.0.2
+ # host -t txt 197.100.83.80.bl.spamcop.net
+ 197.100.83.80.bl.spamcop.net text &quot;Blocked - see http://www.spamcop.net/bl.shtml?80.83.100.197&quot;
+}}}
+----
+* http://www.surbl.org/ checks message body uri's
+* http://www.rulesemporium.com/cgi-bin/uribl.cgi rules emporiums multi checker
+* http://shopping.declude.com/Articles.asp?ID=97 list of anti spam db's
+* http://www.dnsstuff.com/ good spam database lookup
+* http://www.spamhaus.org/ Spamhaus
+* http://packages.debian.org/stable/net/rbldnsd debian package for rbldns server</pre>
+</div>
 <div title="DSH Examples" modifier="Don" created="201005042014" modified="201005042016" tags="dsh ssh remote command" changecount="2">
 <pre>dsh  executes command remotely on several different machines at the same time. It uses groups that are defined in .dsh/group
 {{{
@@ -724,6 +804,108 @@ To display unix seconds:
 $ date +%s
 1266453486
 }}}</pre>
+</div>
+<div title="Debian Packages" modifier="Don" created="201007132109" tags="debian packages" changecount="1">
+<pre>{{{
+COLUMNS=`tput cols` dpkg -l
+}}}
+!!packages in state rc
+removed, but config files remain (ie someone ran dpkg -r rather than dpkg -P)
+{{{
+ aptitude search \~c # (will give you all packages in that state)
+ aptitude purge \~c # will get rid of them
+ dpkg -r # pr --remove remove everything except  configuration files.
+ dpkg -P # or --purge removes everything,  including  configuration  files.
+}}}
+!!apt sources
+{{{
+ $ man sources.list
+}}}
+!!dpkg
+{{{
+ # dpkg -i sun-j2re1.5_1.5.0+update03_i386.deb
+}}}
+Install a package
+{{{
+ $ man dpkg
+}}}
+man page
+
+dpkg output is usually truncated which can truncate the full package name for long packages to get it to show the full info do:
+{{{
+ COLUMNS=200 dpkg --list 'kernel*' | grep ii
+}}}
+To query which packages we have installed much like the 'rpm -qa' command on redhat use the following commands (looking for example for the lsof package):
+{{{
+ # dpkg --list | grep lsof
+ # dpkg -l 'lsof*'
+ # dpkg -l 'lsof*' | grep ii
+}}}
+ii indicates an installed package
+
+you can also use:
+{{{
+ # dpkg --get-selections
+}}}
+For more information on a package use these commands (note they still return info if the package is not installed)
+{{{
+ # dpkg -s lsof
+ # apt-cache showpkg &quot;lsof&quot;
+}}}
+to list all the files belonging to the lsof package:
+{{{
+ # dpkg -L lsof
+}}}
+to list which package a particular file belongs to:
+{{{
+ # dpkg -S /usr/bin/mysql
+ mysql-client: /usr/bin/mysql
+}}}
+to search for versions of a package:
+{{{
+ # apt-cache search packagename
+}}}
+the apt-file command allows us to find out what package we need to install to get a particular utility we are missing from the system (eg traceroute), first we update the database:
+{{{
+ # apt-file update
+}}}
+then search for the utility:
+{{{
+ # apt-file search traceroute
+}}}
+looks like the traceroute utility is contained in the package traceroute, to list all the files in this package use:
+{{{
+ # apt-file list traceroute
+}}}
+which is similar to dpkg -L but shows uninstalled files
+
+!!Manualy installing a deb package (ie not using apt-get)
+{{{
+ # wget http://andressh.net/debian/sarg/sarg_1.4.r1-2_i386.deb
+ # dpkg -i sarg_1.4.r1-2_i386.deb
+}}}
+!!Holding a package back
+given that we are currently holding asterisk to avoid the bug I mentioned last week, following is a technique to manually hold packages as far as apt is concerned.
+
+For example, libpri1 needs to be put in hold.
+{{{
+ echo ``libpri1 hold'' | dpkg --set-selections
+}}}
+does the business. This means you can happily upgrade the rest of your system and not worry about apt 'fixing' things for you.
+
+To move it from hold state:
+{{{
+ echo ``libpri1 install'' | dpkg --set-selections
+}}}
+!!Errors
+E: Dynamic MMap ran out of room
+
+add:
+ APT::Cache-Limit 12582912;
+to /etc/apt/apt.conf
+!!Links
+* http://www.debian.org/distrib/packages#search_packages
+* http://www.debian.org/doc/manuals/apt-howto/index.en.html</pre>
 </div>
 <div title="DefaultTiddlers" modifier="Don" created="201002232122" modified="201005172309" changecount="2">
 <pre></pre>
@@ -776,6 +958,42 @@ Unsplit configuration is better suited for large modifications and is generally 
                                                                        
 A more detailed discussion of split and unsplit configuration can be found in /usr/share/doc/exim4-base/README.Debian.</pre>
 </div>
+<div title="Get postgres running on ubuntu" modifier="Don" created="201007280112" modified="201007280115" tags="psql postgres" changecount="2">
+<pre>install
+{{{
+$ sudo aptitude install postgresql-8.4
+}}}
+edit conf so local connections dont need a pw, this step is not necessary, ident for the local unix sockets will work
+{{{
+$ sudo vi /etc/postgresql/8.4/main/pg_hba.conf
+# IPv4 local connections:
+host    all         all         127.0.0.1/32          trust
+}}}
+login to postgres:
+{{{
+$ sudo -i
+root@atmos:~# su - postgres
+postgres@atmos:~$ psql template1
+psql (8.4.4)
+Type &quot;help&quot; for help.
+
+template1=# CREATE USER don;
+CREATE ROLE
+template1=# CREATE DATABASE don;
+CREATE DATABASE
+template1=# GRANT ALL PRIVILEGES ON DATABASE don TO don;
+GRANT
+}}}
+now you can type psql and login as the system user
+{{{
+$ psql
+psql (8.4.4)
+Type &quot;help&quot; for help.
+
+don=&gt;
+}}}
+}}}</pre>
+</div>
 <div title="Git Cookbook" modifier="Don" created="201004192319" modified="201005172313" tags="git cookbook" changecount="5">
 <pre>You want to reset a branch to be the same as a remote one, you don't care about whats on your local branch you just want to make it the same as the remote one. Make sure you are on the right branch and then do a hard reset:
 {{{
@@ -808,6 +1026,28 @@ $ git branch -a
 * master
   remotes/origin/master
 $ git config push.default matching
+}}}</pre>
+</div>
+<div title="Git Diff" modifier="YourName" created="201008102325" modified="201008102331" tags="git diff apply patch colour color" changecount="2">
+<pre>!!Color diff
+turn on color diff
+{{{
+$ git config diff.color auto
+}}}
+!!Diff a file with an specific older version
+Show the difference between the current version of a file and a previous version on the same branch, find the hash of the previous version using gitlog, then diff the hash and the file:
+{{{
+$ git log somefile.html
+$ git diff 65f9e6c8edcc005b17fdb85a687ac11a71d0982c -- somefile.html
+}}}
+!! apply a patch made with git diff
+best to do it in the repo root, Foobar is simply 
+{{{
+git apply Foobar.pm.diff
+}}}
+Where Foobar.pm.diff is simply the output of git diff eg:
+{{{
+$ git diff lib/XYZ/Foobar.pm &gt; Foobar.pm.diff
 }}}</pre>
 </div>
 <div title="Git branching" modifier="Don" created="201002240406" modified="201004230213" tags="git branch git-branch delete" changecount="3">
