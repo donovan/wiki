@@ -539,7 +539,7 @@ $ for dir in .wrms .bugzilla .cron .spam ; do chmod 700 $dir/{cur,tmp,new} ; don
 $ for file in {1..17} ; do ls -l NZRB_insiderunning_$file.pdf ; done
 }}}</pre>
 </div>
-<div title="Bash Scripting" modifier="Don" created="201002232129" modified="201002232156" tags="loop bash script if for" changecount="3">
+<div title="Bash Scripting" modifier="YourName" created="201002232129" modified="201008300135" tags="loop bash script if for" changecount="6">
 <pre>!! test [ ] construct
 * see page 117 of learning the bash shell
 
@@ -574,6 +574,10 @@ $ for foo in `ls *.jpg` ; do convert $foo -thumbnail 95x60 ${foo/%.jpg/.gif}; do
 $ for dir in .wrms .bugzilla .cron .spam ; do mkdir $dir/{cur,tmp,new} ; done
 
 $ for dir in `ls -1d */`; do echo '----------------------'; echo $dir; cd $dir; git status; cd ~/projects/; done
+
+$ for i in {22..29}; do egrep &quot;\[$i/Aug/2010&quot; access.log.1 | wc -l; done
+
+$ for s in `sudo vserver-stat | tail -n +2 | awk '{print $8}'` ; do echo -- $s --; sudo vserver $s exec uptime ; done
 }}}
 in a script
 {{{
@@ -581,6 +585,10 @@ in a script
  do
     echo $foo
  done
+}}}
+!!ranges
+{{{
+$ for i in {22..29}; do echo $i; done
 }}}</pre>
 </div>
 <div title="Cloning from github" modifier="Don" created="201002160548" tags="git github clone repo" changecount="1">
@@ -1385,6 +1393,18 @@ $hash_ref = $dbh-&gt;selectall_hashref($statement, $key_field);
 
 see also: http://wellington.pm.org/archive/200806/martyn-dbi/slide009.html and perldoc DBI</pre>
 </div>
+<div title="Postfix Commands" modifier="YourName" created="201008240329" tags="postfix" changecount="1">
+<pre>to see the queue
+{{{
+$ sudo mailq
+Mail queue is empty
+}}}
+to flush the queue
+{{{
+$ sudo postfix flush
+}}}
+http://blog.gtuhl.com/2008/08/14/basic-postfix-queue-management/</pre>
+</div>
 <div title="Postgres Sequences" modifier="Don" created="201004270254" tags="postgres sequence nextval currval setval lastval" changecount="1">
 <pre>nextval
 currval
@@ -1439,6 +1459,24 @@ CASE future_contact WHEN TRUE THEN 'Yes' ELSE 'No' END AS future_contact,
 <pre>Run command as different user
 {{{
 sudo -u user /path/to/random/script.pl
+}}}</pre>
+</div>
+<div title="Typing Tutors" modifier="YourName" created="201009012141" tags="typing" changecount="1">
+<pre>* gtypist
+* klavaro
+* ktouch
+* tuxtype
+* typespeed
+
+* http://www.linux.com/archive/articles/146602
+* http://www.gnu.org/software/gtypist/
+
+</pre>
+</div>
+<div title="Viewing JSON" modifier="YourName" created="201008270416" tags="json curl json_xs" changecount="1">
+<pre>Trying to read json is hard, help!
+{{{
+$ curl -s http://json.url.com/foo.json | json_xs
 }}}</pre>
 </div>
 <div title="Vim Macros" modifier="Don" created="201002180302" tags="vim macro record" changecount="1">
