@@ -1330,6 +1330,30 @@ $ for file in `git status | grep modified | awk '{print $3}'`; do grep warnings 
 map ,u /use strict&lt;CR&gt;o#use warnings; FIXME - Bug 2505&lt;Esc&gt;
 }}}</pre>
 </div>
+<div title="Mutt" modifier="Don" created="201009152019" modified="201009152021" tags="mutt tag cron procmail" changecount="2">
+<pre>Tag and save mails labeled smokealert to local/cron dir then purge
+{{{
+T
+smokealert
+;s
+=local/cron
+$
+}}}
+Limit, show only messages matching a pattern
+{{{
+l
+~t barfoo@foobar.net
+}}}
+goto next unread message
+{{{
+tab
+}}}
+patterns (for l and T etc.)
+{{{
+$ man muttrc
+/PATTERNS
+}}}</pre>
+</div>
 <div title="Perl DBI Cookbook" modifier="Don" created="201002180305" modified="201004280311" tags="perl dbi cookbook" changecount="5">
 <pre>when you want an array that corresponds to all the values in a column do:
 {{{
@@ -1503,6 +1527,14 @@ q
 @@
 }}}
 to repeat</pre>
+</div>
+<div title="Vim Spell Checking" modifier="Don" created="201009150500" tags="vim spell vi spelling" changecount="1">
+<pre>@@:set spell@@ turns on spell checking
+@@z=@@ shows list of corrections
+@@]s@@ goes to next word
+@@[s@@ goes to previous word
+@@zg@@ add the word to the good wordlist
+@@zG@@ adds the word to the internal wordlist (behaves like ignore all)</pre>
 </div>
 <div title="find commands" modifier="Don" created="201002240320" modified="201002240322" tags="find command" changecount="2">
 <pre>!!Find
