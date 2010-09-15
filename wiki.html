@@ -1258,10 +1258,14 @@ Generally, block elements create &quot;larger&quot; structures than inline eleme
 &lt;input type=submit value=&quot;Test this form&quot;&gt;
 Submit button can change the words using the value attribute</pre>
 </div>
-<div title="Hashes" modifier="Don" created="201005062130" tags="md5 md5sum hash" changecount="1">
+<div title="Hashes" modifier="Don" created="201005062130" modified="201009020005" tags="md5 md5sum hash" changecount="2">
 <pre>To get the md5 of a string you need to use echo -n or you end up hashing the string plus the newline:
 {{{
 echo -n 'password' | md5sum
+}}}
+If you want to hash a file with a key you can do this (2 keys in this example)
+{{{
+$ { echo -n &quot;key1key2&quot;; cat file; } | md5sum
 }}}</pre>
 </div>
 <div title="IRC and Irssi commands" modifier="Don" created="201005052148" tags="irc irssi" changecount="1">
@@ -1439,6 +1443,13 @@ FMDy, FMdd Mon yyyy HH24:MI:SS TZ =&gt; Mon, 19 Apr 2010 00:00:00 NZST
 * http://www.postgresql.org/docs/8.1/interactive/datatype-datetime.html
 * http://www.postgresql.org/docs/8.1/interactive/functions-datetime.html
 * http://www.postgresql.org/docs/8.1/interactive/functions-formatting.html</pre>
+</div>
+<div title="SFTP Only" modifier="Don" created="201009150046" tags="sftp" changecount="1">
+<pre>This used to be a pain, now its easy:
+
+* http://blogs.techrepublic.com.com/opensource/?p=229
+* http://www.minstrel.org.uk/papers/sftp/builtin/
+</pre>
 </div>
 <div title="SQL JOINS" modifier="YourName" created="201007010310" tags="sql join" changecount="1">
 <pre>http://www.codinghorror.com/blog/2007/10/a-visual-explanation-of-sql-joins.html</pre>
