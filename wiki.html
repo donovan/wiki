@@ -1002,6 +1002,16 @@ don=&gt;
 }}}
 }}}</pre>
 </div>
+<div title="Git Checkout an old version of a file and then revert it" modifier="Don" created="201009212242" tags="git checkout revert" changecount="1">
+<pre>Find the hash of the old version, check that out:
+{{{
+$ git checkout 355ce721234c0f5f7f55d3c934b528d414938238 Flubber.pm
+}}}
+When you're done revert it:
+{{{
+$ git checkout HEAD Flubber.pm
+}}}</pre>
+</div>
 <div title="Git Cookbook" modifier="Don" created="201004192319" modified="201005172313" tags="git cookbook" changecount="5">
 <pre>You want to reset a branch to be the same as a remote one, you don't care about whats on your local branch you just want to make it the same as the remote one. Make sure you are on the right branch and then do a hard reset:
 {{{
@@ -1433,6 +1443,27 @@ $ sudo postfix flush
 }}}
 http://blog.gtuhl.com/2008/08/14/basic-postfix-queue-management/</pre>
 </div>
+<div title="Postgres GROUP BY" modifier="Don" created="201009300231" modified="201009300232" tags="postgres group aggregate sql count" changecount="5">
+<pre>The GROUP BY clause introduces a powerful SQL concept: aggregation . To aggregate means to gather into a sum, or whole. The practical effect of aggregating in a SQL query is that any rows whose results from the GROUP BY expression match identically are grouped together into a single aggregate row . The GROUP BY expression may define a column, but it may also be any operation upon a column as well. If several columns or expressions are specified (delimited by commas), the entire set of specified criteria must be identical for rows to be grouped together.
+
+To effectively use aggregation you must understand that any target columns requested by an aggregating query which are not specified in the GROUP BY clause will be inaccessible, unless selected through an aggregate function . An aggregate function accepts a column name (or expression involving at least one column name) which can represent several values (i.e., from several grouped rows), performs an operation on those values, and returns a single value.
+
+Common aggregate functions include count(), which returns the number of rows in the set, max(), which returns the maximum value in the column, and min(), which returns the minimum value in the column. An aggregate function operates only on rows in the query's result set, and is therefore executed after conditional joins and WHERE conditions have been processed.
+
+Imagine that you wanted to know how many books Book Town stores in its database for each known publisher. You could perform a simple join between the editions and publishers tables in order to associate each publisher name with a title that they publish. It would be tedious to manually count how many titles each publisher maintained, and in cases of larger data sets, it can become difficult to manage larger result sets.
+
+
+* http://www.linuxtopia.org/online_books/database_guides/Practical_PostgreSQL_database/PostgreSQL_x5802_009.htm
+
+{{{
+tab=&gt; SELECT section, COUNT(section) FROM news GROUP BY section;
+ section   | count 
+-----------+-------
+ sport     |  3586
+ politics  |   714
+ all       |   294
+}}}</pre>
+</div>
 <div title="Postgres Sequences" modifier="Don" created="201004270254" tags="postgres sequence nextval currval setval lastval" changecount="1">
 <pre>nextval
 currval
@@ -1475,8 +1506,28 @@ FMDy, FMdd Mon yyyy HH24:MI:SS TZ =&gt; Mon, 19 Apr 2010 00:00:00 NZST
 * http://www.minstrel.org.uk/papers/sftp/builtin/
 </pre>
 </div>
-<div title="SQL JOINS" modifier="YourName" created="201007010310" tags="sql join" changecount="1">
-<pre>http://www.codinghorror.com/blog/2007/10/a-visual-explanation-of-sql-joins.html</pre>
+<div title="SQL JOINS" modifier="Don" created="201007010310" modified="201009300235" tags="sql join" changecount="4">
+<pre>* http://www.codinghorror.com/blog/2007/10/a-visual-explanation-of-sql-joins.html
+* http://en.wikipedia.org/wiki/Join_%28SQL%29 wikipedia JOIN page
+
+!!INNER JOINS
+Inner Joins require each record in the two joined tables to have a matching record.
+
+!!OUTER JOINS
+An outer join does not require each record in the two joined tables to have a matching record. 
+!!! Left Outer Join
+The result of a left outer join for tables A and B always contains all records of the &quot;left&quot; table (A), even if the join-condition does not find any matching record in the &quot;right&quot; table (B). This means that if the ON clause matches 0 (zero) records in B, the join will still return a row in the result—but with NULL in each column from B. This means that a left outer join returns all the values from the left table, plus matched values from the right table</pre>
+</div>
+<div title="SSH Tunnel examples" modifier="Don" created="201009272252" tags="ssh tunnel" changecount="1">
+<pre>!!connect to psql on a vserver
+make tunnel to vserver host
+{{{
+$ ssh hopper -L5433:10.0.0.76:5432
+}}}
+connect to postgres via tunnel
+{{{
+psql -h localhost -p5433 -Ufoo db-name
+}}}</pre>
 </div>
 <div title="Selecting boolean values" modifier="Don" created="201004140312" tags="boolean select postgres sql" changecount="1">
 <pre>When you want other values to appear where you are selecting from a boolean col then:
@@ -1535,6 +1586,96 @@ to repeat</pre>
 @@[s@@ goes to previous word
 @@zg@@ add the word to the good wordlist
 @@zG@@ adds the word to the internal wordlist (behaves like ignore all)</pre>
+</div>
+<div title="Vim regexes" modifier="Don" created="201009230052" modified="201009230056" tags="vim regex" changecount="2">
+<pre>vim backreferences are \1 \2 etc. and note \{
+
+!!Non-Greedy matching
+{{{
+:%s/^.\{-}&quot;//
+}}}
+!!Searching
+Search for not pattern like grep -v
+{{{
+:v/pattern
+}}}
+!!Removing Lines
+{{{
+:v/string/d     # remove all lines that dont contain string
+:g/string/d     # remove all lines that contain string
+:d86G           # delete from cursor to line 86 inclusive
+}}}
+
+!!Ranges
+EOF
+{{{
+$
+}}}
+Line on now
+{{{
+.
+}}}
+absolute
+{{{
+n
+}}}
+next n
+{{{
++n
+}}}
+whole file
+{{{
+%
+}}}
+examples
+{{{
+1,10
+1,+50
+.,+50
+.,50
+%
+1,$
+.,$
+}}}
+
+!! Examples
+{{{
+:%s/^.*from=&lt;//
+:%s/&gt;.*$//
+:g/from=root/d
+}}}
+add \tREJECT to the end of each line from line 11 to EOF
+{{{
+:11,$s/$/\tREJECT/
+}}}
+change : to \t  in lines 269 to 279 in a zone file
+{{{
+:268,279s/:/\t/gc
+}}}
+remove .ext on the 72 lines from where the cursor is now
+{{{
+:.,+72s/\.ext//
+}}}
+remove trailing port numbers from tcpdump output eg converts 121.103.165.37.2345 to 121.103.165.37
+{{{
+:%s:\.\d\{1,4}$::g
+}}}
+after pasting code from one box to another and all the tabs become spaces
+{{{
+:%s: \{8}:\t:g
+}}}
+change red.com.db:textchallenge to textchallenge.red.com using grouping and backreferences
+{{{
+:%s/\(.*\)\.db:\(.*\)/\2.\1/
+}}}
+Convert a bunch of database column names to variables:
+{{{
+:'&lt;,'&gt;s/\(\w\+\)/$\1/g
+}}}
+find and replace wr12345: with wr12345;
+{{{
+:%s/\(wr\d\{5}\):/\1;/
+}}}</pre>
 </div>
 <div title="find commands" modifier="Don" created="201002240320" modified="201002240322" tags="find command" changecount="2">
 <pre>!!Find
