@@ -601,6 +601,9 @@ Firstly you should have the same ssh key and then you should clone the repo usin
 $ git clone git@github.com:donovan/repo-name.git
 }}}</pre>
 </div>
+<div title="Command Line Disk Usage" modifier="Don" created="201010272137" tags="command line disk usage ncurses" changecount="1">
+<pre>run ncdu</pre>
+</div>
 <div title="Command Line HTTP" modifier="Don" created="201005172341" modified="201005172350" tags="command-line [[command line]] http wget nc perl curl netcat" changecount="4">
 <pre>!!!copy lots of files
 {{{
@@ -1499,6 +1502,13 @@ FMDy, FMdd Mon yyyy HH24:MI:SS TZ =&gt; Mon, 19 Apr 2010 00:00:00 NZST
 * http://www.postgresql.org/docs/8.1/interactive/functions-datetime.html
 * http://www.postgresql.org/docs/8.1/interactive/functions-formatting.html</pre>
 </div>
+<div title="Rsync examples" modifier="Don" created="201010280353" tags="rsync" changecount="1">
+<pre>grab a dir 
+
+{{{
+$ rsync -PIvr flubber:/home/foo/.wine .
+}}}</pre>
+</div>
 <div title="SFTP Only" modifier="Don" created="201009150046" tags="sftp" changecount="1">
 <pre>This used to be a pain, now its easy:
 
@@ -1751,6 +1761,16 @@ $field =~ s{'}{''}gxms;
 <pre>To make psql display something for nulls use pset:
 {{{
 tab=&gt; \pset null 'NULL'
+}}}</pre>
+</div>
+<div title="xargs examples" modifier="Don" created="201011010011" tags="xargs command commands" changecount="1">
+<pre>Various xargs examples:
+{{{
+$ git status | grep conf | awk '{print $3}' | xargs git diff
+}}}
+installing a list for debs from debian/control:
+{{{
+$ echo libdbd-pg-perl, libhtml-mason-perl, ghostscript, libimage-info-perl, libmoose-perl, libpdf-reuse-perl, libfile-slurp-perl, libfcgi-procmanager-perl, libcatalyst-modules-perl, libcatalyst-perl, libmodule-install-perl, libfcgi-perl, libconfig-general-perl, libdbix-class-timestamp-perl, libdbix-class-encodedcolumn-perl, libtext-pdf-perl, libfont-ttf-perl, liblocal-lib-perl | sed s/,//g | xargs sudo apt-get install --yes
 }}}</pre>
 </div>
 </div>
