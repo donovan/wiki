@@ -969,6 +969,12 @@ Unsplit configuration is better suited for large modifications and is generally 
                                                                        
 A more detailed discussion of split and unsplit configuration can be found in /usr/share/doc/exim4-base/README.Debian.</pre>
 </div>
+<div title="GIMP cookbook" modifier="Don" created="201011170248" tags="gime cookbook" changecount="1">
+<pre>!!question
+i have a 1x10px image of a single colour, i want to convert it to a 1x100px image
+!!answer
+Image &gt; Scale Image then break the chain, then scale and save</pre>
+</div>
 <div title="Get postgres running on ubuntu" modifier="Don" created="201007280112" modified="201007280115" tags="psql postgres" changecount="2">
 <pre>install
 {{{
@@ -1343,6 +1349,23 @@ $ for file in `git status | grep modified | awk '{print $3}'`; do grep warnings 
 map ,u /use strict&lt;CR&gt;o#use warnings; FIXME - Bug 2505&lt;Esc&gt;
 }}}</pre>
 </div>
+<div title="Mason" modifier="Don" created="201011180230" tags="mason perl components" changecount="1">
+<pre>* http://www.masonhq.com/
+* http://www.masonbook.com/
+
+!!components
+{{{
+    my $comp1 = $m-&gt;current_comp;
+    my $comp2 = $m-&gt;callers(1);
+    my $comp3 = $m-&gt;callers(2);
+
+
+    my $parent = $m-&gt;request_comp;
+    my $caller = $parent-&gt;title;
+}}}
+* http://www.masonhq.com/docs/manual/Component.html
+* http://perl.apache.org/docs/2.0/api/Apache2/RequestRec.html</pre>
+</div>
 <div title="Mutt" modifier="Don" created="201009152019" modified="201009152021" tags="mutt tag cron procmail" changecount="2">
 <pre>Tag and save mails labeled smokealert to local/cron dir then purge
 {{{
@@ -1528,7 +1551,7 @@ An outer join does not require each record in the two joined tables to have a ma
 !!! Left Outer Join
 The result of a left outer join for tables A and B always contains all records of the &quot;left&quot; table (A), even if the join-condition does not find any matching record in the &quot;right&quot; table (B). This means that if the ON clause matches 0 (zero) records in B, the join will still return a row in the result—but with NULL in each column from B. This means that a left outer join returns all the values from the left table, plus matched values from the right table</pre>
 </div>
-<div title="SSH Tunnel examples" modifier="Don" created="201009272252" tags="ssh tunnel" changecount="1">
+<div title="SSH Tunnel examples" modifier="Don" created="201009272252" modified="201012020411" tags="ssh tunnel socks proxy tsocks" changecount="2">
 <pre>!!connect to psql on a vserver
 make tunnel to vserver host
 {{{
@@ -1537,7 +1560,34 @@ $ ssh hopper -L5433:10.0.0.76:5432
 connect to postgres via tunnel
 {{{
 psql -h localhost -p5433 -Ufoo db-name
-}}}</pre>
+}}}
+
+!!Using ssh/tsocks to give a server outgoing access
+Say you have a server which you have remote ssh access to. The server is in an environment that has restrictive egress filtering but you need to send an email or apt-get upgrade or something. You can use ssh to setup a socks &quot;server&quot; on you local machine and then connect using the -R flag which forwards a port on the remote server back to your local machine. So for example to give the machine http access we can do this:
+
+start a socks &quot;server&quot; on your source machine
+{{{ssh -D 1080 me@localhost}}}
+
+ssh to the destination with the -R flag which forwards the connection back to the source
+{{{$ ssh -R1080:localhost:1080 172.16.22.130}}}
+
+try to wget something on the destination (fails):
+{{{
+$ wget foo.com
+--2010-11-30 14:19:14--  http://foo.com/
+Resolving foo.com... 232.170.144.18
+Connecting to foo.com|232.170.144.18|:80... ^C
+}}}
+
+{{{
+$ grep ^server /etc/tsocks.conf 
+server = 127.0.0.1
+server_type = 5
+server_port = 1080
+}}}
+
+now try using tsocks to do the same thing (successful):
+{{{$ tsocks wget foo.com}}}</pre>
 </div>
 <div title="Selecting boolean values" modifier="Don" created="201004140312" tags="boolean select postgres sql" changecount="1">
 <pre>When you want other values to appear where you are selecting from a boolean col then:
@@ -1748,6 +1798,16 @@ find and delete empty directories from the current dir
 $ find -depth -type d -empty -exec rmdir {} \;
 }}}
 see: http://duramecho.com/ComputerPrograms/DeleteEmptyDirectories/index.html</pre>
+</div>
+<div title="mod_perl Apache2::Connection" modifier="Don" created="201011180230" tags="mason mod_perl apache" changecount="1">
+<pre>the $r-&gt; object in mason
+
+http://perl.apache.org/docs/2.0/api/Apache2/Connection.html
+
+my $ip = (split(/\s*,\s*/, $r-&gt;headers_in-&gt;get(&quot;X-Forwarded-For&quot;) || $r-&gt;connection-&gt;remote_ip))[-1];
+
+Also useful:
+* http://perl.apache.org/docs/2.0/api/Apache2/RequestRec.html</pre>
 </div>
 <div title="postgres escaping quotes" modifier="Don" created="201004132237" tags="quotes escape escaping postgres sql" changecount="1">
 <pre>the correct sql way to escape quotes is with two quotes
