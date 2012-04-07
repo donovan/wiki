@@ -999,6 +999,26 @@ Unsplit configuration is better suited for large modifications and is generally 
                                                                        
 A more detailed discussion of split and unsplit configuration can be found in /usr/share/doc/exim4-base/README.Debian.</pre>
 </div>
+<div title="Free up space" creator="YourName" modifier="YourName" created="201204070013" tags="apt-get purge clean space disk" changecount="1">
+<pre>/ is getting full!!
+
+Run filelight or ncdu, common issues:
+
+old kernels:
+{{{
+$ dpkg -l 'linux-*' | sed '/^ii/!d;/'&quot;$(uname -r | sed &quot;s/\(.*\)-\([^0-9]\+\)/\1/&quot;)&quot;'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d'
+}}}
+then get rid of them eg:
+{{{
+$ sudo apt-get -y purge linux-headers-2.6.32-38 linux-headers-2.6.32-38-generic linux-image-2.6.32-38-generic
+}}}
+
+apt cache
+{{{
+$ sudo apt-get clean
+}}}
+</pre>
+</div>
 <div title="GIMP cookbook" modifier="Don" created="201011170248" tags="gime cookbook" changecount="1">
 <pre>!!question
 i have a 1x10px image of a single colour, i want to convert it to a 1x100px image
